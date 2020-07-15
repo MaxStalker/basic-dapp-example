@@ -12,24 +12,87 @@
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap"
       rel="stylesheet"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css"
+    />
   </head>
   <body>
-    <div class="container">
-      <div class="status-container inactive" id="status">
+    <div class="profile-block hidden" id="profile-block">
+      <div class="address-block mr-20">
+        <div class="address-block__label">Your Address:</div>
+        <div class="address-block__value">0x04155654678</div>
+      </div>
+      <button class="button button__light-blue" id="logout">Logout</button>
+    </div>
+
+    <div class="login view" id="login-view">
+      <button class="button button--wide button__light-blue" id="login">
+        Login
+      </button>
+      <div class="processing hidden">
+        <i class="fas fa-spinner spinning mr-10"></i>
+        <p>Processing...</p>
+      </div>
+    </div>
+
+    <div class="container hidden view" id="init-view">
+      <div class="status-container" id="status">
         <div class="status-container__label" id="status-label">
           Vault Balance:
         </div>
-        <div class="status-container__value" id="status-value">15,000</div>
+        <div class="status-container__value" id="status-value">No Vault</div>
       </div>
       <div class="form-container">
-        <div class="deposit-form" id="deposit-main" style="display: none;">
-          <button class="button button__blue full-width" id="start">Deposit</button>
+        <div class="init-form" id="init-form">
+          <div class="input-group mb-10">
+            <div class="input-group__label">
+              Vault Contract Address:
+            </div>
+            <input type="text" class="input" id="vault-contract-address" />
+            <div class="input-group__note">Balance is too low</div>
+          </div>
+          <button class="button full-width button__green" id="init-vault">
+            Init Vault
+          </button>
+          <div class="processing hidden">
+            <i class="fas fa-spinner spinning mr-10"></i>
+            <p>Processing...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container hidden view" id="manage-view">
+      <div class="status-container active" id="balance">
+        <div class="status-container__label">
+          Vault Balance:
+        </div>
+        <div class="status-container__value" id="balance-value">15,000</div>
+
+        <div class="vault-address" id="vault-address">
+          <div class="vault-address__label">Contract Address:</div>
+          <div class="vault-address__value" id="vault-address-value">
+            0x04155654678
+          </div>
+        </div>
+      </div>
+      <div class="form-container">
+        <div class="deposit-form" id="deposit-main">
+          <button class="button button__blue full-width" id="start">
+            Deposit
+          </button>
         </div>
 
-        <div class="deposit-form" id="deposit-form">
+        <div class="deposit-form hidden" id="deposit-form">
           <div class="input-group mb-10">
             <div class="input-group__label">Recepient Address:</div>
-            <input class="input" name="to-address" id="to-address" type="text" />
+            <input
+              class="input"
+              name="to-address"
+              id="to-address"
+              type="text"
+            />
             <div class="input-group__note">Not a valid address</div>
           </div>
           <div class="input-group mb-20">
@@ -37,17 +100,24 @@
             <input class="input" id="amount" type="text" />
             <div class="input-group__note">Balance is too low</div>
           </div>
-          <div class="two-button-group">
-            <button class="button full-width button__light-blue" id="cancel">
-              Cancel
-            </button>
-            <button class="button full-width button__green" id="send">
-              Deposit
-            </button>
+          <div id="controls">
+            <div class="two-button-group">
+              <button class="button full-width button__light-blue" id="cancel">
+                Cancel
+              </button>
+              <button class="button full-width button__green" id="send">
+                Deposit
+              </button>
+            </div>
+            <div class="processing hidden">
+              <i class="fas fa-spinner spinning mr-10"></i>
+              <p>Processing...</p>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <script src="ui.js"></script>
+
+    <script src="app.js"></script>
   </body>
 </html>

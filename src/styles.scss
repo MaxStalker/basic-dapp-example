@@ -18,16 +18,24 @@ body {
   font-family: "Roboto", sans-serif;
   display: grid;
   place-content: center;
+  position: relative;
+}
+
+p {
+  margin: 0;
 }
 
 .button {
   box-sizing: border-box;
   border-radius: 5px;
-  padding: 15px 20px;
+  padding: 15px 30px;
   border: none;
   font-size: 18px;
   cursor: pointer;
   font-weight: bold;
+  &--wide{
+    padding: 15px 50px;
+  }
   &:focus {
     outline: none;
   }
@@ -48,10 +56,10 @@ body {
     }
   }
   &__light-blue {
-    background-color: #A1B7DB;
+    background-color: #a1b7db;
     color: $pureWhite;
     &:active {
-      background-color: $lighter-green;
+      background-color: #bbcdec;
     }
   }
 }
@@ -108,6 +116,18 @@ body {
   margin-bottom: 20px;
 }
 
+.mr-10 {
+  margin-right: 10px;
+}
+
+.mr-20 {
+  margin-right: 20px;
+}
+
+.hidden {
+  display: none !important;
+}
+
 .container {
   width: 350px;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1), 0 0 2px rgba(0, 0, 0, 0.2);
@@ -118,21 +138,20 @@ body {
 
 .status-container {
   text-align: center;
-  padding: 20px 0 10px;
+  padding: 30px 0 20px;
   &__label {
     font-size: 18px;
-    color: $blue;
-    .inactive & {
-      color: #828282;
+    color: #828282;
+    .active & {
+      color: $blue;
     }
   }
   &__value {
-    color: $black;
-    margin-top: 10px;
+    color: #eaeff6;
     font-size: 64px;
     font-weight: 900;
-    .inactive & {
-      color: #eaeff6;
+    .active & {
+      color: $black;
     }
   }
 }
@@ -147,6 +166,59 @@ body {
   grid-gap: 20px;
 }
 
-.deposit-form{
+.deposit-form,
+.init-form {
   padding: 20px;
+}
+
+.vault-address {
+  margin: 10px 0;
+  color: $light-grey;
+  &__label {
+    font-size: 14px;
+  }
+  &__value {
+    font-size: 18px;
+    font-weight: 700;
+  }
+}
+
+.profile-block {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.address-block {
+  color: #86a2d1;
+  text-align: center;
+  &__label {
+    font-size: 14px;
+  }
+  &__value {
+    font-size: 18px;
+    font-weight: 700;
+  }
+}
+
+.processing {
+  color: $light-blue;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 0;
+}
+
+.spinning {
+  animation: spin 0.75s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
