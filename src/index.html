@@ -7,6 +7,8 @@
     />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Vault Explorer</title>
+    <base href="/" target="_blank" />
+
     <link rel="stylesheet" href="styles.scss" />
     <link
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap"
@@ -18,7 +20,16 @@
     />
   </head>
   <body>
-    <div class="profile-block hidden" id="profile-block">
+    <div class="admin-block" id="admin-block">
+      <button class="button button__light-blue" id="deploy-contract">
+        Deploy Vault
+      </button>
+      <div class="processing hidden">
+        <i class="fas fa-spinner spinning mr-10"></i>
+        <p>Processing...</p>
+      </div>
+    </div>
+    <div class="profile-block" id="profile-block">
       <div class="address-block mr-20">
         <div class="address-block__label">Your Address:</div>
         <div class="address-block__value">0x04155654678</div>
