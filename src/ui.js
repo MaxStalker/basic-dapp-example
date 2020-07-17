@@ -74,9 +74,12 @@ class UserInterface {
     this.manageView = document.getElementById("manage-view");
     this.views = document.querySelectorAll(".view");
 
+    this.adminBlock = document.getElementById("admin-block");
     this.profileBlock = document.getElementById("profile-block");
     this.userAddress = this.profileBlock.querySelector(".address-block__value");
 
+    this.btnDeploy = document.getElementById("deploy-contract");
+    this.btnInit = document.getElementById("init-vault");
     this.btnLogin = document.getElementById("login");
     this.loginProcessing = this.loginView.querySelector(".processing");
 
@@ -84,9 +87,7 @@ class UserInterface {
   }
 
   setView = (name) => {
-    console.log(this.views);
     this.views.forEach((view) => {
-      console.log({ view });
       showNode(view, view.id === `${name}-view`);
     });
   };
@@ -103,8 +104,12 @@ class UserInterface {
     showNode(this.profileBlock, show);
   };
 
+  showAdmin = (show) => {
+    showNode(this.adminBlock, show);
+  };
+
   setUserAddress = (address) => {
-    this.userAddress.textContent = address;
+    this.userAddress.textContent = `0x${address}`;
   };
 
   clearUserAddress = () => {
@@ -117,6 +122,14 @@ class UserInterface {
 
   onLogoutClick = (callback) => {
     this.btnLogout.onclick = callback;
+  };
+
+  onDeployClick = (callback) => {
+    this.btnDeploy.onclick = callback;
+  };
+
+  onInitClick = (callback) => {
+    this.btnInit.onclick = callback;
   };
 }
 
