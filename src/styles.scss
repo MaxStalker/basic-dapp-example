@@ -39,6 +39,10 @@ p {
   &:focus {
     outline: none;
   }
+  &:disabled{
+    opacity: 0.25;
+    cursor: not-allowed;
+  }
 
   &__blue {
     background-color: $blue;

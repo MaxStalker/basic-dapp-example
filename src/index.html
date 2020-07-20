@@ -21,8 +21,11 @@
   </head>
   <body>
     <div class="admin-block" id="admin-block">
-      <button class="button button__light-blue" id="deploy-contract">
+      <button class="button button__light-blue mr-10" id="deploy-contract">
         Deploy Vault
+      </button>
+      <button class="button button__light-blue" id="top-up">
+        Mint 100 tokens
       </button>
       <div class="processing hidden">
         <i class="fas fa-spinner spinning mr-10"></i>
@@ -55,21 +58,24 @@
         <div class="status-container__value" id="status-value">No Vault</div>
       </div>
       <div class="form-container">
-        <div class="init-form" id="init-form">
+        <div class="init-form hidden" id="init-form">
           <div class="input-group mb-10">
             <div class="input-group__label">
               Vault Contract Address:
             </div>
             <input type="text" class="input" id="vault-contract-address" />
-            <div class="input-group__note">Balance is too low</div>
+            <div
+              class="input-group__note"
+              id="vault-contract-address-error"
+            ></div>
           </div>
           <button class="button full-width button__green" id="init-vault">
             Init Vault
           </button>
-          <div class="processing hidden">
-            <i class="fas fa-spinner spinning mr-10"></i>
-            <p>Processing...</p>
-          </div>
+        </div>
+        <div class="processing">
+          <i class="fas fa-spinner spinning mr-10"></i>
+          <p>Processing...</p>
         </div>
       </div>
     </div>
@@ -79,12 +85,12 @@
         <div class="status-container__label">
           Vault Balance:
         </div>
-        <div class="status-container__value" id="balance-value">15,000</div>
+        <div class="status-container__value" id="balance-value">--</div>
 
         <div class="vault-address" id="vault-address">
           <div class="vault-address__label">Contract Address:</div>
           <div class="vault-address__value" id="vault-address-value">
-            0x04155654678
+            --
           </div>
         </div>
       </div>
@@ -108,7 +114,7 @@
           </div>
           <div class="input-group mb-20">
             <div class="input-group__label">Amount</div>
-            <input class="input" id="amount" type="text" />
+            <input class="input" type="text" id="to-amount" />
             <div class="input-group__note">Balance is too low</div>
           </div>
           <div id="controls">
@@ -117,7 +123,7 @@
                 Cancel
               </button>
               <button class="button full-width button__green" id="send">
-                Deposit
+                Send
               </button>
             </div>
             <div class="processing hidden">
