@@ -1,3 +1,5 @@
+export const nodeWithId = (name) => document.getElementById(name);
+
 const urlParams = {
   url: "",
   params: {},
@@ -31,6 +33,22 @@ export const generateCode = async (url, match) => {
   });
 };
 
-export const getAddress = (user) => {
-  return user.addr;
+export const getAddress = (user, nullPrefix = true) => {
+  return nullPrefix ? `0x${user.addr}` : user.addr;
+};
+
+export const validateAddress = (address) => {
+  const validStart = address.slice(0, 2) === "0x";
+  if (!validStart) {
+    return {
+      error: "Address should start with 0x",
+    };
+  }
+  const validLength = address.length === 18;
+  if (!validLength) {
+    return {
+      error: "Address is not long enough",
+    };
+  }
+  return {};
 };
