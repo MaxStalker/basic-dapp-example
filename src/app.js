@@ -3,10 +3,20 @@ import * as fcl from "@onflow/fcl";
 import { userInterface } from "./ui";
 import "./flow";
 import { generateCode, getUrlParam } from "./utility";
-import { checkVault, deploy } from "./flow";
+import {
+  checkVault,
+  mint,
+  deploy,
+  getBalance,
+  getUserAddress,
+  initVault,
+  transfer,
+} from "./flow";
 
 import fileVaultContract from "./contracts/Vault.cdc";
 import userVault from "./transactions/user-vault.cdc";
+
+const KEY_CONTRACT_ADDRESS = "contractAddress";
 
 const getAddress = (user) => {
   return user.addr;
@@ -19,12 +29,12 @@ const update = (user) => {
     if (isAdmin) {
       userInterface.showAdmin(true);
     }
-
     userInterface.showProfile(true);
     userInterface.showLoginButton(false);
     userInterface.showLoginProcess(false);
     userInterface.setView("init");
     userInterface.setUserAddress(address);
+    userInterface.checkVaultAddress();
   } else {
     userInterface.showAdmin(false);
     userInterface.showProfile(false);
@@ -38,29 +48,71 @@ const startLogin = async () => {
   userInterface.showLoginButton(false);
   userInterface.showLoginProcess(true);
   await fcl.authenticate();
-  const contractAddress = localStorage.getItem("contractAddress");
+  const contractAddress = localStorage.getItem(KEY_CONTRACT_ADDRESS);
+  console.log({ contractAddress });
   if (contractAddress) {
     const checkResult = await checkVault(contractAddress);
     console.log({ checkResult });
+    console.log("We shall start polling for balance");
+    userInterface.vaultAddressValue.innerText = contractAddress;
+    userInterface.setView("manage");
+    await startBalancePoll();
   } else {
-    console.log('Init vault first...');
+    console.log("Init vault first...");
   }
 };
+
+let pollId = null;
+const startBalancePoll = async () => {
+  const contractAddress = localStorage.getItem(KEY_CONTRACT_ADDRESS);
+  const balance = await getBalance(contractAddress);
+  userInterface.setBalance(balance);
+  pollId = setTimeout(startBalancePoll, 2000);
+};
+
+const startInit = () => {};
+
 userInterface.onLoginClick(startLogin);
 
 userInterface.onLogoutClick(() => {
+  userInterface.setView("login");
+  userInterface.showProfile(false);
   fcl.unauthenticate();
 });
 
 userInterface.onDeployClick(async () => {
-  const vaultContract = await generateCode(fileVaultContract);
-  console.log({ vaultContract });
-  await deploy(vaultContract);
-  console.log("Contract deployed");
+  await deploy();
+  console.log("Vault Contract Deployed! ✅");
+});
+
+userInterface.onTopUp(async () => {
+  const contractAddress = userInterface.vaultContractAddress;
+  const userAddress = await getUserAddress();
+  const response = await mint(contractAddress, userAddress, 100);
+});
+
+userInterface.onCompleteTransfer(async () => {
+  const contractAddress = localStorage.getItem(KEY_CONTRACT_ADDRESS);
+  const recipient = userInterface.transferAddress.value;
+  const amount = userInterface.transferAmount.value;
+  const response = await transfer({ contractAddress, recipient, amount });
 });
 
 userInterface.onInitClick(async () => {
-  console.log("Init vault!");
+  const contractAddress = userInterface.vaultContractAddress;
+  const check = await checkVault(contractAddress);
+
+  if (!check) {
+    const initResponse = await initVault(contractAddress);
+    // TODO: Somehow figure out if transaction was resolved
+    // maybe via response.transactionId...
+    if (true) {
+      localStorage.setItem(KEY_CONTRACT_ADDRESS, contractAddress);
+      startBalancePoll();
+    }
+  } else {
+    startBalancePoll();
+  }
 });
 
 fcl

@@ -1,6 +1,8 @@
-export const statusContainer = document.getElementById("status");
-export const statusLabel = document.getElementById("status-label");
-export const statusValue = document.getElementById("status-value");
+import { nodeWithId, validateAddress } from "./utility";
+
+export const statusContainer = nodeWithId("status");
+export const statusLabel = nodeWithId("status-label");
+export const statusValue = nodeWithId("status-value");
 
 export const setStatus = (active) => {
   if (active) {
@@ -23,14 +25,12 @@ export const setStatusValue = (newValue) => {
   statusValue.innerText = newValue;
 };
 
-export const setBalance = setStatusValue;
-
-export const vaultAddress = document.getElementById("vault-address");
-export const toAddress = document.getElementById("to-address");
-export const startBtn = document.getElementById("start");
-export const cancelBtn = document.getElementById("cancel");
-export const depositMain = document.getElementById("deposit-main");
-export const depositForm = document.getElementById("deposit-form");
+export const vaultAddress = nodeWithId("vault-address");
+export const toAddress = nodeWithId("to-address");
+export const startBtn = nodeWithId("start");
+export const cancelBtn = nodeWithId("cancel");
+export const depositMain = nodeWithId("deposit-main");
+export const depositForm = nodeWithId("deposit-form");
 export const showDepositUI = (show) => {
   if (show) {
     depositForm.classList.remove("hidden");
@@ -53,7 +53,7 @@ startBtn.addEventListener("click", () => {
 });
 
 /*
-export const controls = document.getElementById("controls");
+export const controls = nodeWithId("controls");
 const twoButtons = controls.querySelector(".two-button-group");
 const processing = controls.querySelector(".processing");
 controls.addEventListener("click", () => {
@@ -69,27 +69,56 @@ const showNode = (node, show) => {
 
 class UserInterface {
   constructor() {
-    this.loginView = document.getElementById("login-view");
-    this.initView = document.getElementById("init-view");
-    this.manageView = document.getElementById("manage-view");
+    this.loginView = nodeWithId("login-view");
+    this.initView = nodeWithId("init-view");
+    this.manageView = nodeWithId("manage-view");
     this.views = document.querySelectorAll(".view");
 
-    this.adminBlock = document.getElementById("admin-block");
-    this.profileBlock = document.getElementById("profile-block");
+    this.adminBlock = nodeWithId("admin-block");
+    this.profileBlock = nodeWithId("profile-block");
     this.userAddress = this.profileBlock.querySelector(".address-block__value");
 
-    this.btnDeploy = document.getElementById("deploy-contract");
-    this.btnInit = document.getElementById("init-vault");
-    this.btnLogin = document.getElementById("login");
+    this.initForm = nodeWithId("init-form");
+    this.vaultContractInput = nodeWithId("vault-contract-address");
+    this.vaultContractAddress = "";
+    this.initProcessing = this.initView.querySelector(".processing");
+
+    this.balanceValue = nodeWithId("balance-value");
+    this.vaultAddressValue = nodeWithId("vault-address-value");
+
+    this.btnDeploy = nodeWithId("deploy-contract");
+    this.btnTopUp = nodeWithId("top-up");
+
+    this.btnInit = nodeWithId("init-vault");
+    this.btnLogin = nodeWithId("login");
     this.loginProcessing = this.loginView.querySelector(".processing");
 
-    this.btnLogout = document.getElementById("logout");
+    this.btnLogout = nodeWithId("logout");
+
+    this.btnSend = nodeWithId("send");
+    this.transferAddress = nodeWithId("to-address");
+    this.transferAmount = nodeWithId("to-amount");
+    // Add listeners
+    this.vaultContractInput.addEventListener(
+      "input",
+      this.handleVaultContractInput
+    );
   }
 
   setView = (name) => {
     this.views.forEach((view) => {
       showNode(view, view.id === `${name}-view`);
     });
+
+    if (name === "init") {
+      console.log("Reset init view fields");
+      this.btnInit.disabled = true;
+      this.vaultContractInput.value = "";
+    }
+  };
+
+  setBalance = (balance) => {
+    this.balanceValue.innerText = balance;
   };
 
   showLoginProcess = (show) => {
@@ -116,6 +145,28 @@ class UserInterface {
     this.userAddress.textContent = "--";
   };
 
+  handleVaultContractInput = (event) => {
+    const { value } = event.target;
+    this.vaultContractAddress = value;
+    const { error } = validateAddress(value);
+    console.log({ error });
+    // TODO: add address verification here
+    this.btnInit.disabled = error;
+    if (error) {
+    }
+  };
+
+  checkVaultAddress = () => {
+    this.vaultContractAddress = localStorage.getItem("contractAddress") || "";
+    if (this.vaultContractAddress) {
+      // show balance view
+      // start pinging balance
+    } else {
+      showNode(this.initForm, true);
+      showNode(this.initProcessing, false);
+    }
+  };
+
   onLoginClick = (callback) => {
     this.btnLogin.onclick = callback;
   };
@@ -130,6 +181,14 @@ class UserInterface {
 
   onInitClick = (callback) => {
     this.btnInit.onclick = callback;
+  };
+
+  onTopUp = (callback) => {
+    this.btnTopUp.onclick = callback;
+  };
+
+  onCompleteTransfer = (callback) => {
+    this.btnSend.onclick = callback;
   };
 }
 
